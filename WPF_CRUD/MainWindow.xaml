@@ -5,8 +5,34 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPF_CRUD"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="ProductView" Height="490" Width="800">
     <Grid>
-        
+        <!-- DataGrid -->
+        <DataGrid Name="dgvProduct" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15,62,0,0" Width="553" Height="376"/>
+
+        <!-- Labels -->
+        <Label Name="lblTitle" Content="재고 내역" FontSize="20" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="18,19,0,0"/>
+        <Label Name="lblProductSearch" Content="제품명 검색" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="589,72,0,0"/>
+        <Label Name="lblProductName" Content="제품명" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="589,149,0,0"/>
+        <Label Name="lblQuantity" Content="수량" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="589,211,0,0"/>
+        <Label Name="lblUnitPrice" Content="단가" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="589,275,0,0"/>
+
+        <!-- Textboxes -->
+        <TextBox Name="txtProductSearch" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="586,97,0,0" Width="128"/>
+        <TextBox Name="txtProductName" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="586,173,0,0" Width="181"/>
+        <TextBox Name="txtQuantity" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="586,235,0,0" Width="181"/>
+        <TextBox Name="txtUnitPrice" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="586,299,0,0" Width="181"/>
+
+        <!-- Buttons -->
+        <Button Name="btnSearch" Content="검색" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="720,95,0,0" Width="47" Height="23"/>
+        <Button Name="btnAdd" Content="추가" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="586,343,0,0" Width="181" Height="26"/>
+        <Button Name="btnUpdate" Content="수정" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="586,375,0,0" Width="181" Height="26"/>
+        <Button Name="btnDelete" Content="삭제" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="586,407,0,0" Width="181" Height="26"/>
+
+        <!-- Error Labels -->
+        <Label Name="lblProductSearchError" Content="존재하지 않는 제품입니다." FontSize="8" Foreground="Red" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="591,112,0,0"/>
+        <Label Name="lblProductNameError" Content="이미 존재하는 제품명입니다." FontSize="8" Foreground="Red" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="591,188,0,0"/>
+        <Label Name="lblQuantityError" Content="숫자만 입력해 주세요." FontSize="8" Foreground="Red" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="591,250,0,0"/>
+        <Label Name="lblUnitPriceError" Content="숫자만 입력해 주세요." FontSize="8" Foreground="Red" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="591,314,0,0"/>
     </Grid>
 </Window>
