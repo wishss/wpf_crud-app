@@ -39,6 +39,7 @@ namespace WPF_CRUD.ViewModels
         public string UnitPriceError { get => unitPriceError; set => SetProperty(ref unitPriceError, value); }
 
         // ObservableCollection을 통한 제품 리스트 바인딩
+        private ObservableCollection<ProductModel> originalProducts;  // 원본 데이터 저장
         public ObservableCollection<ProductModel> Products { get; set; }
 
         // ICommand 인터페이스를 통한 명령 (Command) 구현
@@ -49,6 +50,7 @@ namespace WPF_CRUD.ViewModels
 
         public ProductViewModel()
         {
+            originalProducts = new ObservableCollection<ProductModel>();
             Products = new ObservableCollection<ProductModel>();
             AddProductCommand = new RelayCommand(AddProduct);
             UpdateProductCommand = new RelayCommand(UpdateProduct);
@@ -70,13 +72,10 @@ namespace WPF_CRUD.ViewModels
             }
 
             // 새로운 ProductModel 객체 생성
-            var newProduct = new ProductModel
-            {
-                Name = ProductName,
-                Quantity = int.Parse(Quantity),
-                UnitPrice = int.Parse(UnitPrice)
-            };
-            Products.Add(newProduct);
+            Products.Clear();
+            originalProducts.Add(new ProductModel { Name = ProductName, Quantity = int.Parse(Quantity), UnitPrice = int.Parse(UnitPrice) });
+            foreach (var product in originalProducts)
+                Products.Add(product);
 
             ClearInputFields();
         }
@@ -93,12 +92,41 @@ namespace WPF_CRUD.ViewModels
 
         private void GetProduct()
         {
-            // Get product logic
+            ClearErrorMessages();
+
+            if (!originalProducts.Any() || !IsProductExist(ProductSearch))
+            {
+                ProductSearchError = "재고내역이 없습니다.";
+                ClearInputFields();
+                return;
+            }
+
+            if (string.IsNullOrEmpty(ProductSearch))
+            {
+                // 전체 조회
+                Products.Clear();
+                foreach (var product in originalProducts)
+                {
+                    Products.Add(product);
+                }
+                ClearInputFields();
+                return;
+            }
+
+            // 특정 데이터 조회
+            Products.Clear();
+            var filteredProducts = originalProducts.Where(p => p.Name == ProductSearch).ToList();
+            foreach (var product in filteredProducts)
+            {
+                Products.Add(product);
+            }
+
+            ClearInputFields();
         }
 
         public bool IsProductExist(string searchName)
         {
-            return Products.Any(p => p.Name.Equals(searchName, StringComparison.OrdinalIgnoreCase));
+            return originalProducts.Any(p => p.Name.Equals(searchName, StringComparison.OrdinalIgnoreCase));
         }
 
         private bool IsInputFieldsInt(string input)
