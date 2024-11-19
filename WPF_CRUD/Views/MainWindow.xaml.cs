@@ -12,8 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WPF_CRUD.ViewModels;
 
-namespace WPF_CRUD
+namespace WPF_CRUD.Views
 {
     /// <summary>
     /// MainWindow.xaml에 대한 상호 작용 논리
@@ -23,6 +24,7 @@ namespace WPF_CRUD
         public MainWindow()
         {
             InitializeComponent();
+            this.DataContext = new ProductViewModel();  // ViewModel을 DataContext로 설정
         }
     }
 }
