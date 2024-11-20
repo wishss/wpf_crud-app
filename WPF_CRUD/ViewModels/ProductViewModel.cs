@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Windows;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input; // RelayCommand 사용을 위한 네임스페이스 추가
@@ -20,11 +20,11 @@ namespace WPF_CRUD.ViewModels
         private string productName;
         private string quantity;
         private string unitPrice;
-        private string selectedProduct;
         private string productSearchError;
         private string productNameError;
         private string quantityError;
         private string unitPriceError;
+        private ProductModel selectedProduct;
 
         // 데이터 바인딩을 위한 속성들
         //public string SearchProductName { get => searchProductName; set => SetProperty(ref searchProductName, value); }
@@ -32,11 +32,11 @@ namespace WPF_CRUD.ViewModels
         public string ProductName { get => productName; set => SetProperty(ref productName, value); }
         public string Quantity { get => quantity; set => SetProperty(ref quantity, value); }
         public string UnitPrice { get => unitPrice; set => SetProperty(ref unitPrice, value); }
-        public string SelectedProduct { get => selectedProduct; set => SetProperty(ref selectedProduct, value); }
         public string ProductSearchError { get => productSearchError; set => SetProperty(ref productSearchError, value); }
         public string ProductNameError { get => productNameError; set => SetProperty(ref productNameError, value); }
         public string QuantityError { get => quantityError; set => SetProperty(ref quantityError, value); }
         public string UnitPriceError { get => unitPriceError; set => SetProperty(ref unitPriceError, value); }
+        public ProductModel SelectedProduct { get => selectedProduct; set => SetProperty(ref selectedProduct, value); }
 
         // ObservableCollection을 통한 제품 리스트 바인딩
         private ObservableCollection<ProductModel> originalProducts;  // 원본 데이터 저장
@@ -87,14 +87,24 @@ namespace WPF_CRUD.ViewModels
 
         private void DeleteProduct()
         {
-            // Delete product logic
+            if (SelectedProduct != null)
+            {
+                originalProducts.Remove(SelectedProduct);
+                Products.Remove(SelectedProduct);
+                
+                SelectedProduct = null;
+            }
+            else
+            {
+                MessageBox.Show("삭제할 제품을 선택하세요.", "경고", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
         }
 
         private void GetProduct()
         {
             ClearErrorMessages();
 
-            if (!originalProducts.Any() || !IsProductExist(ProductSearch))
+            if (!originalProducts.Any())
             {
                 ProductSearchError = "재고내역이 없습니다.";
                 ClearInputFields();
@@ -113,6 +123,13 @@ namespace WPF_CRUD.ViewModels
                 return;
             }
 
+            if (!IsProductExist(ProductSearch))
+            {
+                ProductSearchError = "해당 재고내역이 없습니다.";
+                ClearInputFields();
+                return;
+            }
+
             // 특정 데이터 조회
             Products.Clear();
             var filteredProducts = originalProducts.Where(p => p.Name == ProductSearch).ToList();
@@ -122,16 +139,6 @@ namespace WPF_CRUD.ViewModels
             }
 
             ClearInputFields();
-        }
-
-        public bool IsProductExist(string searchName)
-        {
-            return originalProducts.Any(p => p.Name.Equals(searchName, StringComparison.OrdinalIgnoreCase));
-        }
-
-        private bool IsInputFieldsInt(string input)
-        {
-            return int.TryParse(input, out _);
         }
 
         private void ClearErrorMessages()
@@ -148,6 +155,11 @@ namespace WPF_CRUD.ViewModels
             ProductName = "";
             Quantity = "";
             UnitPrice = "";
+        }
+
+        public bool IsProductExist(string searchName)
+        {
+            return originalProducts.Any(p => p.Name.Equals(searchName, StringComparison.OrdinalIgnoreCase));
         }
 
         private bool IsInputFieldsNull()
