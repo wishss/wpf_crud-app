@@ -19,12 +19,6 @@
                   CanUserReorderColumns="False"
                   CanUserSortColumns="False"
                   AutoGenerateColumns="False">
-            <!-- DataGrid 마우스 이벤트 -->
-            <!--<DataGrid.InputBindings>
-                <MouseBinding 
-                    Gesture="LeftClick"
-            	    Command="{Binding SelectedItemCommand}"/>
-            </DataGrid.InputBindings> -->
             <!-- DataGrid의 각 열을 정의 (컬럼을 명시적으로 설정) -->
             <DataGrid.Columns>
                 <DataGridTextColumn Header="제품명" Binding="{Binding Name}" Width="200"/>

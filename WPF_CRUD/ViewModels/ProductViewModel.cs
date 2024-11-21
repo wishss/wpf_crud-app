@@ -1,23 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input; // RelayCommand 사용을 위한 네임스페이스 추가
 using CommunityToolkit.Mvvm.ComponentModel;
-using System.Linq;
 using WPF_CRUD.Views;
 using WPF_CRUD.Models;
-using System.Windows.Controls;
 
 namespace WPF_CRUD.ViewModels
 {
     class ProductViewModel : ObservableObject
     {
-        //private string searchProductName;
         private string productSearch;
         private string productName;
         private string quantity;
@@ -29,7 +23,6 @@ namespace WPF_CRUD.ViewModels
         private ProductModel selectedProduct;
 
         // 데이터 바인딩을 위한 속성들
-        //public string SearchProductName { get => searchProductName; set => SetProperty(ref searchProductName, value); }
         public string ProductSearch { get => productSearch; set => SetProperty(ref productSearch, value); }
         public string ProductName { get => productName; set => SetProperty(ref productName, value); }
         public string Quantity { get => quantity; set => SetProperty(ref quantity, value); }
@@ -55,12 +48,12 @@ namespace WPF_CRUD.ViewModels
         {
             originalProducts = new ObservableCollection<ProductModel>();
             Products = new ObservableCollection<ProductModel>();
+
             AddProductCommand = new RelayCommand(AddProduct);
             UpdateProductCommand = new RelayCommand(UpdateProduct);
             DeleteProductCommand = new RelayCommand(DeleteProduct);
             GetProductCommand = new RelayCommand(GetProduct);
         }
-    
 
         private void AddProduct()
         {
@@ -106,7 +99,6 @@ namespace WPF_CRUD.ViewModels
                 var mainWindow = Application.Current.MainWindow as MainWindow;
                 mainWindow?.RefreshDataGrid();
             }
-
         }
 
         private void DeleteProduct()
