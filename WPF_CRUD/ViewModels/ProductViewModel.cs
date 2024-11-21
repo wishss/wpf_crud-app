@@ -9,7 +9,9 @@ using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input; // RelayCommand 사용을 위한 네임스페이스 추가
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Linq;
+using WPF_CRUD.Views;
 using WPF_CRUD.Models;
+using System.Windows.Controls;
 
 namespace WPF_CRUD.ViewModels
 {
@@ -47,6 +49,7 @@ namespace WPF_CRUD.ViewModels
         public ICommand UpdateProductCommand { get; }
         public ICommand DeleteProductCommand { get; }
         public ICommand GetProductCommand { get; }
+        public ICommand SelectedItemCommand { get; }
 
         public ProductViewModel()
         {
@@ -57,6 +60,7 @@ namespace WPF_CRUD.ViewModels
             DeleteProductCommand = new RelayCommand(DeleteProduct);
             GetProductCommand = new RelayCommand(GetProduct);
         }
+    
 
         private void AddProduct()
         {
@@ -81,23 +85,45 @@ namespace WPF_CRUD.ViewModels
         }
 
         private void UpdateProduct()
-        {
-            // Update product logic
+        { 
+            if (SelectedProduct == null)
+            {
+                MessageBox.Show("수정할 제품을 선택하세요.", "경고", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+                
+            var productToUpdate = Products.FirstOrDefault(p => p.Name == SelectedProduct.Name);
+            if (productToUpdate != null)
+            {
+                if (!IsInputFieldsNull() || !IsInputFieldsInt())
+                    return;
+
+                productToUpdate.Quantity = int.Parse(Quantity);
+                productToUpdate.UnitPrice = int.Parse(UnitPrice);
+
+                // DataGrid 갱신을 위해 View에 신호 보내기
+                // MainWindow에서 RefreshDataGrid()를 호출하도록 구현
+                var mainWindow = Application.Current.MainWindow as MainWindow;
+                mainWindow?.RefreshDataGrid();
+            }
+
         }
 
         private void DeleteProduct()
         {
-            if (SelectedProduct != null)
-            {
-                originalProducts.Remove(SelectedProduct);
-                Products.Remove(SelectedProduct);
-                
-                SelectedProduct = null;
-            }
-            else
+            ClearErrorMessages();
+
+            if (SelectedProduct == null)
             {
                 MessageBox.Show("삭제할 제품을 선택하세요.", "경고", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
             }
+                
+            originalProducts.Remove(SelectedProduct);
+            Products.Remove(SelectedProduct);
+            SelectedProduct = null;
+
+            ClearInputFields();
         }
 
         private void GetProduct()
